@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Alineación · Overlay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="css/lineup.css">
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+    /* El lienzo mide 1080 x 1350 y se escala para entrar completo en la fuente de OBS */
+    #stage { position: absolute; left: 50%; top: 50%; width: 1080px; height: 1350px; transform-origin: 50% 50%; }
+    /* Solo con ?tablero (pruebas en un navegador): tablero para ver la transparencia */
+    body.is-browser {
+      background-color: #2a2d33;
+      background-image:
+        linear-gradient(45deg, #34373e 25%, transparent 25%, transparent 75%, #34373e 75%),
+        linear-gradient(45deg, #34373e 25%, transparent 25%, transparent 75%, #34373e 75%);
+      background-size: 32px 32px; background-position: 0 0, 16px 16px;
+    }
+    #hint {
+      position: fixed; left: 12px; bottom: 10px; margin: 0; display: none;
+      font: 500 13px/1.3 'Archivo Variable', Arial, sans-serif; color: #b7bec9;
+    }
+    body.is-browser #hint.on { display: block; }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <p id="hint">Esperando la alineación del panel. Usa Mostrar en el panel, o agrega &demo a la dirección para ver una prueba.</p>
+
+  <script src="js/config.js"></script>
+  <script src="js/shared.js"></script>
+  <script src="js/overlay.js"></script>
+</body>
+</html>

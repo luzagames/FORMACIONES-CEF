@@ -1,0 +1,19 @@
+name = "alineaciones-relay"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# Una "sala" por código: cada sala es un Durable Object que reenvía los mensajes
+# entre el panel y el overlay y recuerda la última alineación.
+[[durable_objects.bindings]]
+name = "SALA"
+class_name = "Sala"
+
+# El plan gratuito solo admite Durable Objects con almacenamiento SQLite.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Sala"]
+
+# Opcional, recomendado: limitar desde qué sitios se puede usar el relay.
+# Pon aquí la dirección donde publicaste el panel (sin barra final). Varias, separadas por coma.
+# [vars]
+# ORIGENES = "https://TU-USUARIO.github.io"

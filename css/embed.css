@@ -1,0 +1,17 @@
+/* Modo "todo en uno": gráfica (1080 x 1350) a la izquierda y panel (520 px) a la derecha.
+   Página total: 1600 x 1350. En vMix se recorta el lado derecho para dejar solo la gráfica. */
+html.embed, html.embed body { margin: 0; width: 1600px; height: 1350px; overflow: hidden; background: transparent; }
+html.embed #liveStage { position: absolute; left: 0; top: 0; width: 1080px; height: 1350px; }
+html.embed .embed-panel { position: absolute; left: 1080px; top: 0; width: 520px; height: 1350px; overflow-y: auto; background: var(--bg); }
+html.embed .app { max-width: none; padding: 0 14px 28px; }
+html.embed .layout { grid-template-columns: 1fr; gap: 14px; }
+html.embed .stage-col { position: static; }
+
+/* Captura de ventana de Chrome (captura.html): la página se adapta al tamaño de la ventana.
+   La gráfica se dibuja siempre completa, pegada arriba a la izquierda, y el panel ocupa el resto. */
+html.embed-ventana, html.embed-ventana body { width: 100vw; height: 100vh; background: #111418; }
+html.embed-ventana #liveStage { transform: scale(var(--gs, 0.7)); transform-origin: 0 0; }
+html.embed-ventana .embed-panel { left: var(--px, 760px); width: var(--pw, 1160px); height: var(--ph, 100vh); }
+html.embed-ventana .live { display: none; }
+html.embed-ventana .embed-panel.wide .layout { grid-template-columns: minmax(340px, 440px) minmax(0, 1fr); gap: 24px; }
+html.embed-ventana .embed-panel.wide .stage-col { position: sticky; top: 64px; }

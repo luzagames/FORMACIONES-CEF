@@ -1,0 +1,13 @@
+{
+  "name": "alineaciones-relay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Relay (Cloudflare Worker + Durable Object) que conecta el panel con el overlay de alineaciones",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

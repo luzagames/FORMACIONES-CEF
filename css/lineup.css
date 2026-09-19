@@ -1,0 +1,95 @@
+/* Gráfica de alineación: lienzo fijo de 1080 x 1350 px */
+.lu-card {
+  --bg: #ffffff;
+  --lines: #e6e6e6;
+  --text: #111111;
+  --shirt: 104px;
+  --nm: 30px;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Archivo Variable', 'Archivo', 'Arial Black', Arial, sans-serif;
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+  transition: opacity .5s ease, transform .75s cubic-bezier(.2, .8, .2, 1);
+}
+.lu-card[data-case="upper"] { text-transform: uppercase; }
+.lu-card[data-visible="false"] { opacity: 0; transform: translateY(28px); }
+.lu-card [hidden] { display: none !important; }
+
+/* Cabecera */
+.lu-head {
+  position: absolute; left: 0; right: 0; top: 0; height: 205px;
+  display: flex; align-items: center; gap: 40px; padding: 0 56px;
+}
+.lu-crest { flex: none; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; }
+.lu-crest img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.lu-crest-ph { width: 128px; height: 150px; }
+.lu-crest-ph svg { width: 100%; height: 100%; display: block; }
+.lu-title {
+  margin: 0; flex: 1; min-width: 0;
+  font-weight: 900; font-size: 92px; line-height: 1; letter-spacing: -.012em;
+  white-space: nowrap;
+}
+.lu-title span {
+  display: inline-block; transform-origin: left center;
+  transform: scaleX(var(--fit, 1));
+}
+
+/* Cancha */
+.lu-pitch { position: absolute; left: 60px; top: 215px; width: 960px; height: 1005px; }
+.lu-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.lu-lines rect, .lu-lines line, .lu-lines circle, .lu-lines path {
+  fill: none; stroke: var(--lines); stroke-width: 5;
+}
+.lu-lines .dot { fill: var(--lines); stroke: none; }
+
+/* Jugadores: el punto (left/top) es el centro de la camiseta; el nombre cuelga debajo */
+.lu-player {
+  position: absolute; width: var(--shirt); height: var(--shirt);
+  transform: translate(-50%, -50%);
+  transition:
+    left .6s cubic-bezier(.3, .7, .2, 1),
+    top .6s cubic-bezier(.3, .7, .2, 1),
+    opacity .45s ease,
+    transform .55s cubic-bezier(.2, .9, .3, 1.15);
+}
+.lu-shirt-host, .lu-shirt { display: block; width: 100%; height: 100%; }
+.lu-name {
+  position: absolute; left: 50%; top: 100%; margin-top: 2px;
+  transform: translateX(-50%) scaleX(var(--fit, 1));
+  white-space: nowrap; text-align: center;
+  font-weight: 800; font-size: var(--nm); line-height: 1.1; letter-spacing: .01em;
+}
+.lu-card[data-visible="false"] .lu-player { opacity: 0; transform: translate(-50%, -50%) scale(.82); }
+/* entrada escalonada: primero el arquero, después cada línea hacia el ataque */
+.lu-card[data-visible="true"] .lu-player {
+  transition-delay: 0s, 0s, calc(var(--i) * 45ms + 250ms), calc(var(--i) * 45ms + 250ms);
+}
+
+/* Pie */
+.lu-foot {
+  position: absolute; left: 0; right: 0; top: 1226px; height: 110px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px; line-height: 1; letter-spacing: .01em;
+}
+.lu-coach { display: inline-flex; align-items: baseline; gap: .35em; }
+.lu-coach .lbl { font-weight: 500; }
+.lu-coach b { display: inline-block; font-weight: 800; transform: scaleX(var(--fit, 1)); }
+
+/* Sobre video (fondo transparente) los textos necesitan algo de separación */
+.lu-card[data-transparent="true"] .lu-title,
+.lu-card[data-transparent="true"] .lu-name,
+.lu-card[data-transparent="true"] .lu-coach { text-shadow: 0 2px 10px rgba(0, 0, 0, .35); }
+
+/* Modo edición (vista previa del panel) */
+.lu-card.is-editing .lu-player { cursor: grab; touch-action: none; }
+.lu-card.is-editing .lu-player::before {
+  content: ''; position: absolute; inset: -12px -18px -54px; border-radius: 18px;
+  border: 4px dashed transparent; transition: border-color .15s ease;
+}
+.lu-card.is-editing .lu-player:hover::before { border-color: #5b9dff; }
+.lu-card.is-editing .lu-player.dragging { transition: opacity .2s, transform .2s; cursor: grabbing; z-index: 5; }
+.lu-card.is-editing .lu-player.dragging::before { border-color: #5b9dff; background: rgba(91, 157, 255, .12); }

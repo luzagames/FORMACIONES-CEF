@@ -1,0 +1,177 @@
+/* Panel de control: pensado para un dock estrecho de OBS (300 a 520 px) y también para pantalla completa */
+:root {
+  color-scheme: dark;
+  --bg: #1e2127;
+  --surface: #262a32;
+  --field: #2e333c;
+  --line: #3b414d;
+  --text: #e8ebf0;
+  --muted: #9ba4b1;
+  --blue: #5b9dff;
+  --blue-soft: rgba(91, 157, 255, .16);
+  --tally: #e5352b;
+  --ok: #3fbf7f;
+  --radius: 7px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body {
+  font: 500 14px/1.4 'Archivo Variable', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+[hidden] { display: none !important; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+.app { max-width: 1180px; margin: 0 auto; padding: 0 12px 28px; }
+
+/* Barra superior con el botón de aire */
+.bar {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--bg); padding: 12px 0 10px; border-bottom: 1px solid var(--line);
+  display: grid; gap: 8px;
+}
+.live {
+  display: grid; gap: 2px; width: 100%; text-align: left; cursor: pointer;
+  padding: 10px 16px 11px; border-radius: 9px;
+  background: var(--surface); border: 1px solid var(--line);
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.live:hover { border-color: #566070; }
+.live-state { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
+.tally { width: 10px; height: 10px; border-radius: 50%; background: #5a6270; flex: none; }
+.live-action { font-size: 20px; font-weight: 800; letter-spacing: -.005em; }
+.live[aria-pressed="true"] { background: var(--tally); border-color: var(--tally); }
+.live[aria-pressed="true"]:hover { background: #ef4a40; }
+.live[aria-pressed="true"] .live-state { color: rgba(255, 255, 255, .88); }
+.live[aria-pressed="true"] .tally { background: #fff; }
+
+.link { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); }
+.link .dot { width: 8px; height: 8px; border-radius: 50%; background: #5a6270; }
+.link.on { color: var(--text); }
+.link.on .dot { background: var(--ok); }
+
+/* Distribución */
+.layout { display: grid; gap: 14px; padding-top: 14px; }
+.stage-col { min-width: 0; }
+.controls { min-width: 0; }
+
+@media (min-width: 900px) {
+  .layout { grid-template-columns: minmax(340px, 470px) minmax(0, 1fr); gap: 28px; }
+  .stage-col { position: sticky; top: 118px; align-self: start; }
+}
+
+/* Vista previa */
+.preview {
+  position: relative; margin: 0 auto; overflow: hidden; border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--line);
+  background-color: #2a2d33;
+}
+.preview.is-transparent {
+  background-image:
+    linear-gradient(45deg, #363a42 25%, transparent 25%, transparent 75%, #363a42 75%),
+    linear-gradient(45deg, #363a42 25%, transparent 25%, transparent 75%, #363a42 75%);
+  background-size: 24px 24px; background-position: 0 0, 12px 12px;
+}
+.preview-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1350px; transform-origin: 0 0; }
+
+/* Pestañas */
+.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.tabs button {
+  flex: 1; padding: 10px 8px; background: none; border: 0; border-bottom: 2px solid transparent;
+  color: var(--muted); cursor: pointer; font-weight: 700; margin-bottom: -1px;
+}
+.tabs button:hover { color: var(--text); }
+.tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--blue); }
+
+/* Bloques */
+.block { padding: 16px 0; border-bottom: 1px solid var(--line); display: grid; gap: 12px; }
+.block:last-child { border-bottom: 0; }
+h2 { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: -.005em; }
+.help { margin: 0; font-size: 12.5px; color: var(--muted); }
+.help.center { text-align: center; margin-top: 8px; }
+.msg { margin: 6px 0 0; font-size: 12.5px; color: #ffb454; }
+
+.field { display: grid; gap: 5px; }
+.field label, .color span { font-size: 12.5px; color: var(--muted); }
+.field.split { grid-template-columns: 76px 1fr; gap: 10px; }
+.field.split > div { display: grid; gap: 5px; min-width: 0; }
+.field.row { grid-template-columns: 1fr auto; align-items: center; }
+output { color: var(--text); font-weight: 700; margin-left: 4px; }
+
+input[type="text"], input[type="url"], input:not([type]) {
+  width: 100%; min-width: 0; padding: 8px 10px; border-radius: var(--radius);
+  background: var(--field); border: 1px solid var(--line);
+}
+input[type="text"]:hover, input[type="url"]:hover { border-color: #566070; }
+input::placeholder { color: #6f7887; }
+input[type="range"] { width: 100%; accent-color: var(--blue); }
+input[type="color"] {
+  width: 100%; height: 36px; padding: 3px; border-radius: var(--radius);
+  background: var(--field); border: 1px solid var(--line); cursor: pointer;
+}
+
+.check { display: flex; align-items: center; gap: 9px; cursor: pointer; }
+.check input { width: 17px; height: 17px; accent-color: var(--blue); margin: 0; flex: none; }
+
+/* Botones */
+.btn {
+  padding: 8px 14px; border-radius: var(--radius); cursor: pointer; font-weight: 700;
+  background: var(--field); border: 1px solid var(--line);
+}
+.btn:hover { border-color: #66707f; background: #343a45; }
+.btn.ghost { background: transparent; }
+.btn.primary { background: var(--blue); border-color: var(--blue); color: #0a1c38; }
+.btn.primary:hover { background: #7bb0ff; }
+.btn.danger { border-color: var(--tally); color: #ff9c95; }
+
+/* Chips (formaciones, temas, motivos) */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  padding: 6px 11px; border-radius: 999px; cursor: pointer; font-weight: 700; font-size: 13px;
+  background: transparent; border: 1px solid var(--line); font-variant-numeric: tabular-nums;
+}
+.chip:hover { border-color: #66707f; }
+.chip[aria-pressed="true"] { background: var(--blue-soft); border-color: var(--blue); color: #cfe2ff; }
+
+/* Jugadores */
+.grp { display: grid; gap: 6px; margin-bottom: 10px; }
+.grp-title { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.prow { display: grid; grid-template-columns: 54px 1fr; gap: 6px; }
+.prow input.num { text-align: center; font-variant-numeric: tabular-nums; }
+.prow.is-picked input { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+
+/* Escudo */
+.crest-row { display: flex; align-items: center; gap: 14px; padding: 10px; border-radius: 9px; border: 1px dashed var(--line); }
+.crest-row.is-over { border-color: var(--blue); background: var(--blue-soft); }
+.crest-thumb { width: 64px; height: 64px; flex: none; display: grid; place-items: center; background: var(--field); border-radius: 6px; }
+.crest-thumb img, .crest-thumb svg { max-width: 52px; max-height: 52px; display: block; }
+.crest-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Editor de camiseta */
+.kit { display: grid; gap: 12px; }
+.pats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.pat {
+  display: grid; justify-items: center; gap: 2px; padding: 6px 2px 5px; cursor: pointer;
+  background: var(--field); border: 1px solid var(--line); border-radius: var(--radius);
+  font-size: 11.5px; color: var(--muted); line-height: 1.15; text-align: center;
+}
+.pat svg { width: 40px; height: 40px; display: block; }
+.pat:hover { border-color: #66707f; }
+.pat[aria-pressed="true"] { border-color: var(--blue); background: var(--blue-soft); color: var(--text); }
+.colors { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.colors.three { grid-template-columns: repeat(3, 1fr); }
+.color { display: grid; gap: 4px; }
+
+/* Guardadas */
+.saved { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.saved li {
+  display: grid; grid-template-columns: 1fr auto auto; gap: 6px; align-items: center;
+  padding: 8px 8px 8px 12px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line);
+}
+.saved .nm { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.saved .when { display: block; font-size: 11.5px; font-weight: 500; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

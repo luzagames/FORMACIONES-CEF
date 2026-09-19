@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Alineaciones · Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="css/lineup.css">
+  <link rel="stylesheet" href="css/panel.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="bar">
+    <button id="liveBtn" class="live" type="button" aria-pressed="false">
+      <span class="live-state"><i class="tally" aria-hidden="true"></i><span id="liveState">Fuera de pantalla</span></span>
+      <span class="live-action" id="liveAction">Mostrar alineación</span>
+    </button>
+    <div class="link" id="link" role="status">
+      <i class="dot" aria-hidden="true"></i><span id="linkText">Sin señal del overlay</span>
+    </div>
+    <p class="help" id="linkHelp" hidden>Si el overlay está abierto y sigue sin señal: en su fuente de navegador desmarca «Archivo local» y pon la ruta como dirección file:/// (ver el README).</p>
+  </header>
+
+  <div class="layout">
+
+    <section class="stage-col" aria-label="Vista previa">
+      <div class="preview" id="preview"><div class="preview-stage" id="previewStage"></div></div>
+      <p class="help center">Arrastra a los jugadores para moverlos. Con un clic editas su nombre.</p>
+    </section>
+
+    <section class="controls">
+      <div class="block cap" id="capBox" hidden>
+        <h2>Captura de ventana</h2>
+        <p class="help">La gráfica siempre se dibuja completa a la izquierda. Para sacarla y ponerla al aire usa el botón de Overlay de vMix.</p>
+        <p class="help" id="capGuide"></p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Secciones">
+        <button type="button" role="tab" id="tab-lineup" aria-controls="pane-lineup" aria-selected="true">Alineación</button>
+        <button type="button" role="tab" id="tab-design" aria-controls="pane-design" aria-selected="false">Diseño</button>
+        <button type="button" role="tab" id="tab-saved" aria-controls="pane-saved" aria-selected="false">Guardadas</button>
+        <button type="button" role="tab" id="tab-conn" aria-controls="pane-conn" aria-selected="false">Conexión</button>
+      </div>
+
+      <!-- ALINEACIÓN -->
+      <div class="pane" id="pane-lineup" role="tabpanel" aria-labelledby="tab-lineup">
+        <div class="block">
+          <h2>Formación</h2>
+          <div class="chips" id="formationChips"></div>
+          <div class="field">
+            <label for="formationTxt">Otra formación</label>
+            <input id="formationTxt" type="text" inputmode="numeric" autocomplete="off" placeholder="Por ejemplo 3-4-1-2">
+            <p class="msg" id="formationMsg" hidden>Los números deben sumar 10, sin contar al arquero.</p>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Textos</h2>
+          <div class="field">
+            <label for="titleInp">Título</label>
+            <input id="titleInp" type="text" autocomplete="off">
+          </div>
+          <div class="field split">
+            <div class="short">
+              <label for="coachLbl">Etiqueta</label>
+              <input id="coachLbl" type="text" autocomplete="off">
+            </div>
+            <div class="grow">
+              <label for="coachInp">Director técnico</label>
+              <input id="coachInp" type="text" autocomplete="off">
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" id="showCoach"> Mostrar el director técnico</label>
+        </div>
+
+        <div class="block">
+          <h2>Jugadores</h2>
+          <p class="help">En cada línea, de izquierda a derecha. Con Enter pasas al siguiente.</p>
+          <div id="roster"></div>
+          <button type="button" class="btn ghost" id="resetPos">Restablecer posiciones</button>
+        </div>
+      </div>
+
+      <!-- DISEÑO -->
+      <div class="pane" id="pane-design" role="tabpanel" aria-labelledby="tab-design" hidden>
+        <div class="block">
+          <h2>Escudo</h2>
+          <div class="crest-row" id="crestDrop">
+            <div class="crest-thumb" id="crestThumb"></div>
+            <div class="crest-actions">
+              <button type="button" class="btn" id="crestBtn">Elegir imagen</button>
+              <button type="button" class="btn ghost" id="crestClear">Quitar</button>
+              <input type="file" id="crestFile" accept="image/*" hidden>
+            </div>
+          </div>
+          <p class="help">También puedes soltar o pegar una imagen en esta sección. Sin escudo se muestra uno genérico con los colores de la camiseta.</p>
+          <div class="field">
+            <label for="crestUrl">O pega la dirección de una imagen</label>
+            <input id="crestUrl" type="url" autocomplete="off" placeholder="https://">
+          </div>
+          <label class="check"><input type="checkbox" id="showCrest"> Mostrar el escudo</label>
+        </div>
+
+        <div class="block">
+          <h2>Camiseta</h2>
+          <div id="kitEditor"></div>
+          <label class="check"><input type="checkbox" id="showNumbers"> Mostrar el número sobre la camiseta</label>
+        </div>
+
+        <div class="block">
+          <h2>Arquero</h2>
+          <label class="check"><input type="checkbox" id="gkSame"> Usar la misma camiseta que el resto</label>
+          <div id="gkEditor"></div>
+        </div>
+
+        <div class="block">
+          <h2>Colores de la gráfica</h2>
+          <div class="chips" id="themeChips"></div>
+          <div class="colors three">
+            <label class="color"><span>Fondo</span><input type="color" id="thBg"></label>
+            <label class="color"><span>Líneas</span><input type="color" id="thLines"></label>
+            <label class="color"><span>Texto</span><input type="color" id="thText"></label>
+          </div>
+          <label class="check"><input type="checkbox" id="thTransparent"> Fondo transparente (para poner sobre el video)</label>
+          <label class="check"><input type="checkbox" id="thUpper"> Todo en mayúsculas</label>
+          <div class="field">
+            <label for="thShirt">Tamaño de las camisetas <output id="thShirtOut"></output></label>
+            <input type="range" id="thShirt" min="70" max="140" step="2">
+          </div>
+          <div class="field">
+            <label for="thName">Tamaño de los nombres <output id="thNameOut"></output></label>
+            <input type="range" id="thName" min="20" max="42" step="1">
+          </div>
+        </div>
+      </div>
+
+      <!-- GUARDADAS -->
+      <div class="pane" id="pane-saved" role="tabpanel" aria-labelledby="tab-saved" hidden>
+        <div class="block">
+          <h2>Guardar la alineación actual</h2>
+          <div class="field row">
+            <input id="saveName" type="text" autocomplete="off" placeholder="Por ejemplo: Local vs Visitante" aria-label="Nombre de la alineación">
+            <button type="button" class="btn primary" id="saveBtn">Guardar</button>
+          </div>
+          <p class="msg" id="saveMsg" hidden></p>
+        </div>
+        <div class="block">
+          <h2>Alineaciones guardadas</h2>
+          <ul class="saved" id="savedList"></ul>
+          <p class="help" id="savedEmpty">Todavía no hay ninguna. Guarda la del local y la del visitante antes del partido y cámbialas con un clic.</p>
+        </div>
+      </div>
+
+      <!-- CONEXIÓN -->
+      <div class="pane" id="pane-conn" role="tabpanel" aria-labelledby="tab-conn" hidden>
+        <div class="block">
+          <h2>Conexión por internet</h2>
+          <p class="help" id="connInfo"></p>
+        </div>
+        <div id="connBody" hidden>
+          <div class="block">
+            <h2>Código de sala</h2>
+            <div class="field row">
+              <input id="salaInp" type="text" autocomplete="off" spellcheck="false" aria-label="Código de sala">
+              <button type="button" class="btn" id="salaNew">Código nuevo</button>
+            </div>
+            <p class="help">Quien tenga este código puede controlar esta alineación. Si lo cambias, hay que actualizar la dirección del overlay.</p>
+            <p class="msg" id="salaMsg" hidden></p>
+          </div>
+          <div class="block">
+            <h2>Dirección del overlay</h2>
+            <p class="help">Pégala en una entrada Web Browser de vMix o en una fuente de navegador de OBS.</p>
+            <div class="field row">
+              <input id="ovUrl" type="text" readonly aria-label="Dirección del overlay">
+              <button type="button" class="btn primary" id="ovCopy">Copiar</button>
+            </div>
+          </div>
+          <div class="block">
+            <h2>Dirección del panel</h2>
+            <p class="help">Para abrir este mismo panel en otra computadora o en el celular.</p>
+            <div class="field row">
+              <input id="pnUrl" type="text" readonly aria-label="Dirección del panel">
+              <button type="button" class="btn" id="pnCopy">Copiar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/panel.js"></script>
+</body>
+</html>
