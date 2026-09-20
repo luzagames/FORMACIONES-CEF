@@ -100,15 +100,22 @@ En una prueba con vMix 29, dos entradas *Web Browser* separadas (una para el pan
 
 **Todo en uno (`todo-en-uno.html`):**
 
-1. Agrega una entrada *Web Browser* con la ruta de `todo-en-uno.html` y tamaño **1600 x 1350**. A la izquierda queda la gráfica (1080 x 1350) y a la derecha el panel.
+1. Agrega una entrada *Web Browser* con la ruta de `todo-en-uno.html` y tamaño **1600 x 1350**. A la izquierda queda la gráfica (1080 x 1350) y a la derecha el panel. (Con ese tamaño exacto la página mantiene siempre esta geometría. Si la abres en un navegador con una ventana más chica, se adapta sola para que nada quede cortado.)
 2. Maneja el panel con el mouse desde la ventana de la entrada o desde el Preview. Para escribir nombres, clic derecho sobre la entrada → *Keyboard Enabled* (mientras esté activo, los atajos de vMix no funcionan).
 3. Para el aire, pon la entrada en un canal de *Overlay* y en *Settings → Position* recorta el lado derecho (*Crop X2*) hasta que quede solo la gráfica. Oculta es transparente; entra y sale con el botón del panel.
 4. Se maneja desde la computadora donde corre vMix.
 
 Sin verificar en un vMix real: el recorte por overlay y cómo se ve la ventana de la entrada una vez recortada.
 
+## Adaptación a distintos tamaños de pantalla
+
+- **`panel.html`** funciona desde un celular hasta un monitor grande: en pantallas angostas las pestañas se desplazan, los controles se agrandan al usarse con el dedo y los campos usan letra de 16 px para que el iPhone no haga zoom al tocarlos. En pantallas anchas pasa a dos columnas.
+- **`overlay.html`** se escala solo para entrar completo en la fuente de OBS o la entrada de vMix, del tamaño que sea.
+- **`captura.html`** se adapta siempre al tamaño de la ventana. **`todo-en-uno.html`** lo hace solo cuando la ventana es menor que 1600 x 1350.
+
 ## Notas
 
+- Si cambias `panel.html`, regenera `todo-en-uno.html` y `captura.html` con `python tools/generar-paginas.py`.
 - El escudo por defecto es genérico y usa los colores de la camiseta. Sube el tuyo en *Diseño*.
 - Los datos de ejemplo (nombres y título) reproducen la imagen de referencia. Cámbialos en la pestaña *Alineación*.
 - Para probar el overlay en un navegador común: `overlay.html?tablero&demo` (tablero gris para ver la transparencia y una alineación de prueba). Sin esos parámetros el fondo es siempre transparente, en cualquier programa.
@@ -123,6 +130,7 @@ relay/          servicio de Cloudflare que conecta panel y overlay por internet
 js/shared.js    lógica común: formaciones, camiseta, dibujo, sincronización
 js/panel.js     panel de control
 js/config.js    dirección del relay (se completa una vez)
+tools/          generar-paginas.py: regenera todo-en-uno.html y captura.html a partir de panel.html
 js/overlay.js   recepción y dibujo en OBS
 css/            estilos de la gráfica, del panel y del modo todo en uno
 fonts/          fuente Archivo en local

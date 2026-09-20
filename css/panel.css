@@ -175,3 +175,41 @@ input[type="color"] {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* ---------- Adaptación a pantallas chicas y táctiles ---------- */
+.app { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+
+/* Las pestañas nunca se salen: si no caben, se desplazan */
+.tabs { overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { flex: 1 0 auto; white-space: nowrap; }
+
+@media (max-width: 340px) {
+  .tabs button { padding: 10px 5px; font-size: 12.5px; }
+}
+@media (max-width: 380px) {
+  .tabs button { padding: 10px 8px; font-size: 13px; }
+  .live-action { font-size: 18px; }
+  .prow { grid-template-columns: 48px 1fr; }
+}
+/* Tablet: una sola columna, pero sin estirarla a todo el ancho */
+@media (min-width: 640px) and (max-width: 899px) {
+  .layout { max-width: 680px; margin-left: auto; margin-right: auto; }
+}
+/* Con letra menor a 16 px, Safari en iPhone hace zoom al tocar un campo */
+@media (max-width: 800px) {
+  input[type="text"], input[type="url"], input:not([type]) { font-size: 16px; }
+}
+/* Pantallas táctiles: controles más grandes para el dedo */
+@media (pointer: coarse) {
+  .btn { padding: 11px 16px; }
+  .chip { padding: 10px 14px; }
+  .pat { padding: 8px 2px 7px; }
+  .check { padding: 4px 0; gap: 12px; }
+  .check input, input[type="checkbox"] { width: 22px; height: 22px; }
+  input[type="range"] { height: 34px; }
+  input[type="color"] { height: 44px; }
+  input[type="text"], input[type="url"], input:not([type]) { padding: 11px 12px; }
+  .tabs button { padding: 13px 10px; }
+  .saved li .btn { padding: 10px 12px; }
+}
