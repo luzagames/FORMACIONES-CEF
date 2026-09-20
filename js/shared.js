@@ -183,7 +183,7 @@
         for (i = 1; i < 8; i += 2) p += '<rect x="0" y="' + (i * 12.5) + '" width="100" height="12.5" fill="' + a + '"/>';
         break;
       case 'halves':   p = '<rect x="0" y="0" width="50" height="100" fill="' + a + '"/>'; break;
-      case 'band':     p = '<rect x="0" y="44" width="100" height="18" fill="' + a + '"/>'; break;
+      case 'band':     p = '<rect x="26" y="44" width="48" height="18" fill="' + a + '"/>'; break; // solo el torso: no invade las mangas
       case 'sleeves':  p = '<rect x="0" y="0" width="26" height="100" fill="' + a + '"/><rect x="74" y="0" width="26" height="100" fill="' + a + '"/>'; break;
       default: p = '';
     }
