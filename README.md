@@ -134,6 +134,7 @@ overlay.html    la gráfica para OBS (opcional)
 server.js       servidor local opcional para OBS
 iniciar.bat     abre server.js con doble clic en Windows
 relay/          servicio de Cloudflare que conecta panel y overlay por internet (opcional)
+favicon.ico, favicon-192.png, apple-touch-icon.png    el ícono de la pestaña (logo CEF)
 js/shared.js    lógica común: formaciones, camiseta, dibujo, sincronización
 js/panel.js     el armador
 js/export.js    exporta la gráfica como imagen JPG o PNG
