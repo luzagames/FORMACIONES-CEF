@@ -213,3 +213,14 @@ input[type="color"] {
   .tabs button { padding: 13px 10px; }
   .saved li .btn { padding: 10px 12px; }
 }
+
+/* Exportar como imagen */
+.export { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 12px; }
+.export select {
+  padding: 8px 10px; border-radius: var(--radius); cursor: pointer;
+  background: var(--field); border: 1px solid var(--line);
+}
+.export select:hover { border-color: #66707f; }
+.export .btn:disabled { opacity: .55; cursor: progress; }
+#expMsg.warn { color: #ffb454; }
+@media (pointer: coarse) { .export select { padding: 11px 12px; font-size: 16px; } }

@@ -28,6 +28,15 @@
     <section class="stage-col" aria-label="Vista previa">
       <div class="preview" id="preview"><div class="preview-stage" id="previewStage"></div></div>
       <p class="help center">Arrastra a los jugadores para moverlos. Con un clic editas su nombre.</p>
+      <div class="export" role="group" aria-label="Exportar la formación como imagen">
+        <button type="button" class="btn primary" id="expJpg">Descargar JPG</button>
+        <button type="button" class="btn" id="expPng">PNG</button>
+        <select id="expSize" aria-label="Tamaño de la imagen">
+          <option value="1">1080 × 1350</option>
+          <option value="2">2160 × 2700</option>
+        </select>
+      </div>
+      <p class="help center" id="expMsg" role="status" hidden></p>
     </section>
 
     <section class="controls">
@@ -193,6 +202,7 @@
 <script>window.LU_EMBED = true; window.LU_EMBED_LAYOUT = 'auto';</script>
 <script src="js/config.js"></script>
 <script src="js/shared.js"></script>
+<script src="js/export.js"></script>
 <script src="js/panel.js"></script>
 </body>
 </html>

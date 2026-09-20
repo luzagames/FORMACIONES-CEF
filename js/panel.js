@@ -467,6 +467,38 @@
   $('#saveBtn').addEventListener('click', saveCurrent);
   $('#saveName').addEventListener('keydown', function (e) { if (e.key === 'Enter') saveCurrent(); });
 
+  /* ---------- exportar como imagen ---------- */
+  var expTimer = null;
+  function expDecir(texto, aviso) {
+    var m = $('#expMsg');
+    m.textContent = texto; m.hidden = !texto; m.classList.toggle('warn', !!aviso);
+    clearTimeout(expTimer);
+    if (texto) expTimer = setTimeout(function () { m.hidden = true; }, aviso ? 9000 : 5000);
+  }
+  function descargar(blob, nombre) {
+    var url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = nombre;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+  }
+  function exportar(formato) {
+    var botones = [$('#expJpg'), $('#expPng')];
+    botones.forEach(function (b) { b.disabled = true; });
+    expDecir('Generando la imagen…', false);
+    var ext = formato === 'png' ? 'png' : 'jpg';
+    LU.exportImage(LU.clone(state), { formato: formato, escala: +$('#expSize').value })
+      .then(function (r) {
+        var nombre = LU.nombreArchivo(state, ext);
+        descargar(r.blob, nombre);
+        expDecir(r.avisos.length ? 'Imagen generada (' + nombre + '). ' + r.avisos.join(' ')
+          : 'Imagen generada: ' + nombre + ' (' + r.ancho + '×' + r.alto + ')', r.avisos.length > 0);
+      })
+      .catch(function (e) { expDecir('No se pudo generar la imagen: ' + (e && e.message ? e.message : e), true); })
+      .then(function () { botones.forEach(function (b) { b.disabled = false; }); });
+  }
+  $('#expJpg').addEventListener('click', function () { exportar('jpeg'); });
+  $('#expPng').addEventListener('click', function () { exportar('png'); });
+
   /* ---------- conexión por internet (relay) ---------- */
   function dirBase() { return location.href.split(/[?#]/)[0].replace(/[^/]*$/, ''); }
   function urlDe(pagina) {
