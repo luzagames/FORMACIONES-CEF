@@ -184,13 +184,13 @@ input[type="color"] {
 .tabs::-webkit-scrollbar { display: none; }
 .tabs button { flex: 1 0 auto; white-space: nowrap; }
 
-@media (max-width: 340px) {
-  .tabs button { padding: 10px 5px; font-size: 12.5px; }
-}
 @media (max-width: 380px) {
   .tabs button { padding: 10px 8px; font-size: 13px; }
   .live-action { font-size: 18px; }
   .prow { grid-template-columns: 48px 1fr; }
+}
+@media (max-width: 340px) {
+  .tabs button { padding: 10px 5px; font-size: 12.5px; }
 }
 /* Tablet: una sola columna, pero sin estirarla a todo el ancho */
 @media (min-width: 640px) and (max-width: 899px) {
@@ -210,7 +210,7 @@ input[type="color"] {
   input[type="range"] { height: 34px; }
   input[type="color"] { height: 44px; }
   input[type="text"], input[type="url"], input:not([type]) { padding: 11px 12px; }
-  .tabs button { padding: 13px 10px; }
+  .tabs button { padding-top: 13px; padding-bottom: 13px; }
   .saved li .btn { padding: 10px 12px; }
 }
 

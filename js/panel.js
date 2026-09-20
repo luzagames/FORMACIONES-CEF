@@ -18,65 +18,6 @@
   var touched = false;   // hasta que el usuario cambie algo, "en pantalla" copia lo que dice el overlay
   var booted = false;
 
-  // Modo "todo en uno": la gráfica en vivo se dibuja en esta misma página, a la izquierda del panel,
-  // así que no hace falta comunicar dos páginas distintas. Formatos (window.LU_EMBED_LAYOUT):
-  //   "auto"    (todo-en-uno.html): 1600 x 1350 exactos cuando la ventana lo permite (entrada Web Browser
-  //             de vMix); si la ventana es más chica (un navegador normal) se adapta como "ventana".
-  //   "ventana" (captura.html): siempre se adapta al tamaño de la ventana (captura de una ventana de Chrome).
-  var EMBED = !!window.LU_EMBED;
-  var LAYOUT = window.LU_EMBED_LAYOUT || 'auto';
-  var ventanaOn = false;
-  var live = null, side = null;
-
-  function calcularModo() {
-    if (!EMBED) return false;
-    if (LAYOUT === 'ventana') return true;
-    return !(window.innerWidth >= 1580 && window.innerHeight >= 1330); // margen de 20 px sobre 1600 x 1350
-  }
-
-  // Devuelve true si cambió entre el formato fijo y el adaptable
-  function aplicarLayout() {
-    if (!EMBED) return false;
-    var on = calcularModo(), cambio = on !== ventanaOn;
-    ventanaOn = on;
-    document.documentElement.classList.toggle('embed-ventana', on);
-    $('#capBox').hidden = !on;
-    if (on) {
-      // La gráfica ocupa toda la altura de la ventana (a escala) y el panel el resto del ancho
-      var vw = window.innerWidth, vh = window.innerHeight;
-      var s = Math.max(0.25, Math.min(vh / LU.STAGE.h, (vw - 480) / LU.STAGE.w));
-      var gw = Math.round(LU.STAGE.w * s), gh = Math.round(LU.STAGE.h * s);
-      var st = document.documentElement.style;
-      st.setProperty('--gs', s);
-      st.setProperty('--px', gw + 'px');
-      st.setProperty('--pw', Math.max(0, vw - gw) + 'px');
-      st.setProperty('--ph', vh + 'px');
-      side.classList.toggle('wide', vw - gw >= 900);
-      // medidas en píxeles reales de pantalla (con el escalado de Windows), que es lo que ve vMix
-      var d = window.devicePixelRatio || 1, px = function (n) { return Math.round(n * d); };
-      $('#capGuide').textContent = 'Ventana ' + px(vw) + '×' + px(vh) + ' px. Gráfica ' + px(gw) + '×' + px(gh) +
-        ' px. Recorte derecho (Crop X2): ' + px(vw - gw) + ' px.';
-    }
-    return cambio;
-  }
-
-  if (EMBED) {
-    document.documentElement.classList.add('embed');
-    var liveHost = el('div', { id: 'liveStage' });
-    document.body.insertBefore(liveHost, document.body.firstChild);
-    side = el('div', { class: 'embed-panel' });
-    var app = $('.app');
-    app.parentNode.insertBefore(side, app);
-    side.appendChild(app);
-    live = LU.createRenderer(liveHost, { uid: 'live' });
-    aplicarLayout();
-    window.addEventListener('resize', function () {
-      var cambio = aplicarLayout();
-      if (cambio && booted) renderPreview(); // al cambiar de formato cambia si la gráfica respeta "en pantalla"
-      if (previewBox) fitPreview();
-    });
-  }
-
   var previewBox = $('#preview');
   var previewStage = $('#previewStage');
   var renderer = LU.createRenderer(previewStage, {
@@ -108,7 +49,6 @@
   }
   function renderPreview() {
     renderer.update(state, { forceVisible: true });
-    if (live) live.update(state, ventanaOn ? { forceVisible: true } : undefined); // la de verdad (en formato adaptable siempre completa)
     previewBox.classList.toggle('is-transparent', !!state.theme.transparent);
   }
   function commit() {
@@ -121,7 +61,7 @@
   /* ---------- vista previa ---------- */
   function fitPreview() {
     var w = previewBox.parentElement.clientWidth;
-    var maxH = ventanaOn ? Math.max(340, Math.min(620, window.innerHeight * 0.6)) : (EMBED ? 380 : Math.max(240, Math.min(640, window.innerHeight * 0.62)));
+    var maxH = Math.max(240, Math.min(640, window.innerHeight * 0.62));
     var s = Math.min(w / LU.STAGE.w, maxH / LU.STAGE.h);
     if (!(s > 0)) return;
     previewStage.style.transform = 'scale(' + s + ')';
@@ -146,12 +86,6 @@
 
   var lastPresence = 0, bootAt = Date.now(), relayOverlays = 0;
   function updateLink() {
-    if (EMBED) {
-      $('#link').classList.add('on');
-      $('#linkText').textContent = 'Todo en uno: la gráfica está en esta misma página';
-      $('#linkHelp').hidden = true;
-      return;
-    }
     var viaRelay = sync.mode === 'relay';
     var on = (viaRelay && relayOverlays > 0) || Date.now() - lastPresence < 6000;
     $('#link').classList.toggle('on', on);
@@ -523,7 +457,7 @@
     var info = $('#connInfo'), body = $('#connBody');
     if (!sync.relay) {
       info.textContent = 'Todavía no hay un relay configurado. Sirve para manejar el panel desde otro navegador u otra computadora ' +
-        'y mandar la gráfica a vMix u OBS por internet. Los pasos están en el README, sección "Relay".';
+        'y mandar la gráfica a OBS por internet. Los pasos están en el README, sección "Relay".';
       body.hidden = true; return;
     }
     info.textContent = 'El panel y el overlay se comunican a través del relay. Cada uno puede estar en un navegador o en un equipo distinto.';

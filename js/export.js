@@ -73,9 +73,13 @@
       .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   }
 
+  // Nombre del archivo: título y director técnico, por ejemplo "probable-once-leonardo-ponzio.jpg".
+  // Si el DT está oculto o vacío se usa solo el título; sin ninguno de los dos, "formacion-<esquema>".
   LU.nombreArchivo = function (state, ext) {
-    var base = slug(state.title) || 'formacion';
-    return base + '-' + state.formation + '.' + ext;
+    var partes = [slug(state.title)];
+    if (state.showCoach && state.coach) partes.push(slug(state.coach));
+    var base = partes.filter(Boolean).join('-') || ('formacion-' + state.formation);
+    return base + '.' + ext;
   };
 
   /*
