@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Alineaciones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Sin JavaScript se redirige igual (los parámetros de la dirección se conservan solo con JavaScript) -->
+  <noscript><meta http-equiv="refresh" content="0; url=captura.html"></noscript>
+  <script>
+    // La dirección raíz del sitio abre el armador para capturar la ventana; se conservan ?sala=, ?relay=, etc.
+    location.replace('captura.html' + location.search + location.hash);
+  </script>
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #1e2127; color: #e8ebf0;
+           font: 500 16px/1.5 system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; }
+    a { color: #7fb3ff; }
+  </style>
+</head>
+<body>
+  <p>Abriendo el armador… <a href="captura.html">Si no se abre, haz clic aquí</a>.</p>
+</body>
+</html>
